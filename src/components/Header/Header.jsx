@@ -4,13 +4,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { signOut } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
+import { UserAuth } from "../../context/AuthContext";
 
 const Header = ({ isAuth, setIsAuth }) => {
+  const {logout} = UserAuth();
+
   // Log out 
   const logOut = async () => {
-    await signOut(auth);
+    await logout(auth);
     localStorage.clear();
     setIsAuth(false);
     window.location.pathname = "/login";

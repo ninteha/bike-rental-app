@@ -12,15 +12,15 @@ const UserContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
-  const createUser = (email, password, role) => {
-    return createUserWithEmailAndPassword(auth, email, password, role);
+  const createUser = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
   };
-
-  const signIn = (email, password) => {
+  const signIn = (email, password, role) => {
     return signInWithEmailAndPassword(
       auth,
       email,
       password,
+      role,
       localStorage.setItem("isAuth", "true")
     );
   };
@@ -31,7 +31,6 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log(currentUser);
       setUser(currentUser);
     });
     return () => {

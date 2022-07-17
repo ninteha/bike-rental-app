@@ -37,14 +37,13 @@ const Signup = () => {
   // Register handler
   const handleSubmit = async (err) => {
     try {
-      const user = await createUser(email, password, role);
+      await createUser(email, password, role);
       await addDoc(userRef, {
         id: auth.currentUser.uid,
         email,
         password,
         role,
       });
-      console.log(user);
       setIsRegistered(true);
       window.location.pathname = "/login";
     } catch (err) {
