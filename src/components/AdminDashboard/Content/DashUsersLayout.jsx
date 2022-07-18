@@ -26,12 +26,10 @@ const DashUsersLayout = ({ email, password, usersId, deleteUser }) => {
           <Typography variant="body1"></Typography>
         </div>
         <div>
-          <span style={{ marginRight: "15px" }}>
+          <span style={{ marginRight: "15px", cursor: "pointer" }}>
             <EditIcon color="primary" />
           </span>
-          <span
-          style={{cursor: "pointer"}}
-          >
+          <span style={{ cursor: "pointer" }}>
             <DeleteIcon
               onClick={() => {
                 deleteUser(usersId);

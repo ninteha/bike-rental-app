@@ -5,29 +5,24 @@ import { collection } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import DashUsersLayout from "../Content/DashUsersLayout";
 import { Button } from "@mui/material";
-import UsersModal from "./UsersModal";
+import AddUsersModal from "./AddUsersModal"
+import EditUsersModal from "./EditUsersModal";
 
 const Users = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const userRef = collection(db, "users");
 
-  // Add Users
+  // Edit Users
 
-  // const addUsers = async () => {
-  //   await addDoc(userRef, {
-  //     email,
-  //     password,
-  //     role,
-  //   });
-  // };
+  // db.collection()
 
   // Delete Users
   const deleteUser = async (id) => {
     const userDoc = doc(db, "users", id);
     await deleteDoc(userDoc);
   };
-  // Get data from Firebase
+  // Get Users data from Firebase
   useEffect(() => {
     const getPosts = async () => {
       const data = await getDocs(userRef);
@@ -49,20 +44,24 @@ const Users = () => {
       >
         Add Users
       </Button>
-      <UsersModal open={isOpen} onClose={() => setIsOpen(false)}>
-        Modal?
-      </UsersModal>
-      {usersList.map((users) => {
-        return (
-          <DashUsersLayout
-            key={users.id}
-            email={users.email}
-            password={users.password}
-            usersId={users.id}
-            deleteUser={deleteUser}
-          />
-        );
-      })}
+      <AddUsersModal open={isOpen} onClose={() => setIsOpen(false)} />
+      <EditUsersModal open={isOpen} onClose={() => setIsOpen(false)} />
+
+      {usersList.length >= 1 ? (
+        usersList.map((users) => {
+          return (
+            <DashUsersLayout
+              key={users.id}
+              email={users.email}
+              password={users.password}
+              usersId={users.id}
+              deleteUser={deleteUser}
+            />
+          );
+        })
+      ) : (
+        <h1>There is no data!</h1>
+      )}
     </div>
   );
 };
