@@ -7,15 +7,16 @@ import { Link } from "react-router-dom";
 import { auth } from "../../FirebaseConfig";
 import { UserAuth } from "../../context/AuthContext";
 
-const Header = ({ isAuth, setIsAuth }) => {
-  const {logout} = UserAuth();
+const Header = ({ isAuth, setIsAuth, setIsAdmin, isAdmin }) => {
+  const { logout } = UserAuth();
 
-  // Log out 
+  // Log out
   const logOut = async () => {
     await logout(auth);
     localStorage.clear();
     setIsAuth(false);
     window.location.pathname = "/login";
+    setIsAdmin(false);
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -34,8 +35,8 @@ const Header = ({ isAuth, setIsAuth }) => {
                   to="/login/"
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                Login
-                   </Link>
+                  Login
+                </Link>
               </Button>
               <Button color="inherit">
                 <Link
@@ -48,14 +49,16 @@ const Header = ({ isAuth, setIsAuth }) => {
             </>
           ) : (
             <>
-              <Button color="inherit">
-                <Link
-                  to="/dashboard/"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  Dashboard
-                </Link>
-              </Button>
+              {isAdmin ? (
+                <Button color="inherit">
+                  <Link
+                    to="/dashboard/"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    Dashboard
+                  </Link>
+                </Button>
+              ) : null}
               <Button
                 style={{ textDecoration: "none", color: "black" }}
                 onClick={logOut}

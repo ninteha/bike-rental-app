@@ -1,12 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { UserAuth } from "../../context/AuthContext";
-
-const Protected = ({ isAuth, children }) => {
-  const { users } = UserAuth();
-
-  if (users.role !== "manager") {
+const Manager = ({ isAdmin, children }) => {
+  if (!isAdmin) {
     return <Navigate to="/" replace />;
   }
   return children;
 };
-export default Protected;
+export default Manager;

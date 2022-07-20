@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Mainpage from "./pages/MainPage";
 import { Routes, Route } from "react-router-dom";
 import Signup from "./pages/SignUp";
@@ -11,16 +11,36 @@ import { AuthContextProvider } from "./context/AuthContext";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
 import DashUsersContent from "./components/AdminDashboard/Content/DashUsersContent";
 import DashPostsContent from "./components/AdminDashboard/Content/DashPostsContent";
-
-
+import { auth } from "./FirebaseConfig";
+import Manager from "./pages/RouteProtector/Manager";
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    return auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const idTokenResult = await user.getIdTokenResult();
+        if (idTokenResult.claims.role === "admin") {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }
+    });
+  }, []);
+
   return (
     <>
       <AuthContextProvider>
-        <Header isAuth={isAuth} setIsAuth={setIsAuth} />
+        <Header
+          isAuth={isAuth}
+          setIsAuth={setIsAuth}
+          isAdmin={isAdmin}
+          setIsAdmin={setIsAdmin}
+        />
         <Routes>
           <Route path="/" element={<Mainpage />} />
           <Route
@@ -42,9 +62,11 @@ const App = () => {
           <Route
             path="/dashboard/"
             element={
-              <Protected isAuth={isAuth}>
-                <Dashboard />
-              </Protected>
+              <Manager isAdmin={isAdmin}>
+                <Protected isAuth={isAuth}>
+                  <Dashboard />
+                </Protected>
+              </Manager>
             }
           >
             <Route path="users" element={<DashUsersContent />} />
