@@ -13,6 +13,7 @@ import DashUsersContent from "./components/AdminDashboard/Content/DashUsersConte
 import DashPostsContent from "./components/AdminDashboard/Content/DashPostsContent";
 import { auth } from "./FirebaseConfig";
 import Manager from "./pages/RouteProtector/Manager";
+import DashRentedBikesContent from "./components/AdminDashboard/Content/DashRentedBikesContent";
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
@@ -25,13 +26,14 @@ const App = () => {
         const idTokenResult = await user.getIdTokenResult();
         if (idTokenResult.claims.role === "admin") {
           setIsAdmin(true);
+          localStorage.setItem("isAdmin", true);
         } else {
           setIsAdmin(false);
+          localStorage.setItem("isAdmin", false);
         }
       }
     });
   }, []);
-
   return (
     <>
       <AuthContextProvider>
@@ -71,6 +73,7 @@ const App = () => {
           >
             <Route path="users" element={<DashUsersContent />} />
             <Route path="posts" element={<DashPostsContent />} />
+            <Route path="rentedbikes" element={<DashRentedBikesContent />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>

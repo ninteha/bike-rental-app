@@ -45,7 +45,9 @@ const Signup = () => {
         role,
       });
       setIsRegistered(true);
-      window.location.pathname = "/login";
+      setTimeout(() => {
+        window.location.pathname = "/login";
+      }, 2000);
     } catch (err) {
       setError(err.message);
       console.log(err.message);

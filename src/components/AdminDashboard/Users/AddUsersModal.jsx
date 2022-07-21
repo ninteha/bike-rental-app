@@ -44,7 +44,8 @@ const AddUsersModal = ({ open, onClose }) => {
   let role = "user";
 
   // Add Users handler
-  const handleSubmit = async (err) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       await createUser(email, password, role);
       await addDoc(userRef, {

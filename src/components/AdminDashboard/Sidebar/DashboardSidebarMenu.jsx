@@ -3,6 +3,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import PedalBikeIcon from '@mui/icons-material/PedalBike';
 import ListItemText from "@mui/material/ListItemText";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { AddCircle } from "@mui/icons-material";
@@ -40,6 +41,15 @@ const DashboardSidebarMenu = () => {
             <AddCircle />
           </ListItemIcon>
           <ListItemText primary="Posts" />
+        </ListItemButton>
+      </Link>
+      <Divider />
+      <Link to={"/dashboard/rentedbikes/"}>
+        <ListItemButton style={{ textDecoration: "none", color: "black" }}>
+          <ListItemIcon>
+            <PedalBikeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Rented Bikes" />
         </ListItemButton>
       </Link>
     </List>

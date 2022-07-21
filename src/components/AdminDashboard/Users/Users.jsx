@@ -5,32 +5,35 @@ import { collection } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import DashUsersLayout from "../Content/DashUsersLayout";
 import { Button } from "@mui/material";
-import AddUsersModal from "./AddUsersModal"
+import AddUsersModal from "./AddUsersModal";
 import EditUsersModal from "./EditUsersModal";
 
 const Users = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const userRef = collection(db, "users");
+  const [randstate, setRandstate] = useState(0);
 
   // Edit Users
 
-  // db.collection()
-
   // Delete Users
+
   const deleteUser = async (id) => {
+    setRandstate(randstate + 1);
     const userDoc = doc(db, "users", id);
     await deleteDoc(userDoc);
   };
+
   // Get Users data from Firebase
+
   useEffect(() => {
-    const getPosts = async () => {
+    const getUsers = async () => {
       const data = await getDocs(userRef);
       setUsersList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
 
-    getPosts();
-  }, [deleteUser]);
+    getUsers();
+  }, [randstate]);
 
   return (
     <div>
