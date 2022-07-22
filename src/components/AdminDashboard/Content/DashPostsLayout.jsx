@@ -7,11 +7,12 @@ import {
   Rating,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 const DashPostsLayout = ({
   pathname,
@@ -23,18 +24,33 @@ const DashPostsLayout = ({
   price,
   deletePost,
   rating,
-  startDate,
-  setStartDate,
+  rentalDate,
   location,
   updatePost,
-  setTitle,
-  setColor,
-  setModel,
-  setPrice,
-  setLocation,
+  setPostData,
+  postData,
   setIsEditing,
   isEditing,
+  uploaded,
+  cancelRent,
 }) => {
+  const [newRating, setNewRating] = useState(rating);
+  const [selectedDate, setSelectedDate] = useState(uploaded);
+
+  useEffect(() => {
+    const handleRating = () => {
+      console.log(newRating);
+      setPostData({ ...postData, rating: newRating });
+    };
+    if (newRating !== rating) {
+      handleRating();
+      updatePost(postsId);
+      console.log("updated !!!!!");
+    } else return;
+  }, [newRating, postData, postsId, rating, setPostData, updatePost]);
+
+  console.log(moment(rentalDate).format("L"));
+
   return (
     <div>
       <Paper
@@ -63,6 +79,7 @@ const DashPostsLayout = ({
                 height: "220px",
                 borderRadius: "8px",
                 border: "1px solid black",
+                objectFit: "cover",
               }}
             />
           </div>
@@ -77,9 +94,10 @@ const DashPostsLayout = ({
             {isEditing ? (
               <FormControl variant="standard">
                 <Input
+                  placeholder={title}
                   defaultValue={title}
                   onChange={(e) => {
-                    setTitle(e.target.value);
+                    setPostData({ ...postData, title: e.target.value });
                   }}
                 />
               </FormControl>
@@ -93,9 +111,10 @@ const DashPostsLayout = ({
             {isEditing ? (
               <FormControl variant="standard">
                 <Input
+                  placeholder={color}
                   defaultValue={color}
                   onChange={(e) => {
-                    setColor(e.target.value);
+                    setPostData({ ...postData, color: e.target.value });
                   }}
                 />
               </FormControl>
@@ -109,9 +128,11 @@ const DashPostsLayout = ({
             {isEditing ? (
               <FormControl variant="standard">
                 <Input
+                  type="number"
+                  placeholder={price}
                   defaultValue={price}
                   onChange={(e) => {
-                    setPrice(e.target.value);
+                    setPostData({ ...postData, price: e.target.value });
                   }}
                 />
               </FormControl>
@@ -124,9 +145,10 @@ const DashPostsLayout = ({
             {isEditing ? (
               <FormControl variant="standard">
                 <Input
+                  placeholder={location}
                   defaultValue={location}
                   onChange={(e) => {
-                    setLocation(e.target.value);
+                    setPostData({ ...postData, location: e.target.value });
                   }}
                 />
               </FormControl>
@@ -139,10 +161,11 @@ const DashPostsLayout = ({
             {isEditing ? (
               <FormControl variant="standard">
                 <Input
-                  onChange={(e) => {
-                    setModel(e.target.value);
-                  }}
+                  placeholder={model}
                   defaultValue={model}
+                  onChange={(e) => {
+                    setPostData({ ...postData, model: e.target.value });
+                  }}
                 />
               </FormControl>
             ) : (
@@ -154,9 +177,12 @@ const DashPostsLayout = ({
               Rating:
               <Rating
                 name="half-rating"
-                disabled={pathname === "/dashboard/posts/" ? true : false}
-                defaultValue={rating}
+                readOnly={pathname === "/dashboard/posts/" ? true : false}
+                defaultValue={rating ? rating : 0}
                 precision={1}
+                onChange={(e) => {
+                  setNewRating(Number(e.target.value));
+                }}
               />
             </Typography>
           </div>
@@ -174,11 +200,22 @@ const DashPostsLayout = ({
         </div>
         {pathname !== "/dashboard/posts/" ? (
           <div>
-            <Typography variant="body1">Rent a bike:</Typography>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-            />
+            {!rentalDate ? (
+              <>
+                <Typography variant="body1">Rent a bike:</Typography>
+                <DatePicker
+                  selected={selectedDate}
+                  minDate={new Date()}
+                  filterDate={(date) =>
+                    moment(date).format("L") !== moment(rentalDate).format("L")
+                  }
+                  onChange={(date) => {
+                    setSelectedDate(date);
+                    setPostData({ ...postData, rentalDate: date });
+                  }}
+                />
+              </>
+            ) : null}
             <div
               style={{
                 display: "flex",
@@ -186,7 +223,19 @@ const DashPostsLayout = ({
                 paddingTop: "15px",
               }}
             >
-              <Button variant="contained">Rent a bike!</Button>
+              {!rentalDate ? (
+                <Button onClick={() => updatePost(postsId)} variant="contained">
+                  Rent a bike!
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => cancelRent(postsId)}
+                  variant="contained"
+                  color="error"
+                >
+                  Cancel a rent
+                </Button>
+              )}
             </div>
           </div>
         ) : null}

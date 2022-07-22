@@ -1,45 +1,51 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "@mui/material";
 import {
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { db } from "../../../FirebaseConfig";
+import { auth, db } from "../../../FirebaseConfig";
 import DashPostsLayout from "../Content/DashPostsLayout";
+import AddPostsModal from "./AddPostsModal";
 
 const Posts = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = window.location.pathname;
   const [postsList, setPostsList] = useState([]);
-  const [startDate, setStartDate] = useState(new Date());
   const postsRef = collection(db, "bikes");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Edit Posts states
-  
-  const [title, setTitle] = useState("");
-  const [color, setColor] = useState("");
-  const [model, setModel] = useState("");
-  const [price, setPrice] = useState("");
-  const [location, setLocation] = useState("");
-  const [randstate, setRandstate] = useState(0); 
+  // Cancel Rent
+  const cancelRent = async (id) => {
+    setRandstate(randstate + 1);
+    await updateDoc(doc(postsRef, id), {
+      ...postData,
+      rentalDate: deleteField(),
+      rentedToId: deleteField(),
+      rentedTo: deleteField(),
+    });
+    console.log("post updated ");
+    setIsEditing(false);
+  };
 
-  // Edit Posts
+  // Edit Posts states
+  const [randstate, setRandstate] = useState(0);
+  const [postData, setPostData] = useState([]);
+
   const updatePost = async (id) => {
     setRandstate(randstate + 1);
     await updateDoc(doc(postsRef, id), {
-      title: title,
-      color: color,
-      model: model,
-      price: price,
-      location: location,
+      ...postData,
+      rentedToId: auth.currentUser.uid,
+      rentedTo: auth.currentUser.email,
     });
-    setIsEditing(false)
-      .catch((error) => {
-        console.log(error.message);
-      });
+    console.log("post updated ");
+    setIsEditing(false);
   };
 
   // Delete Posts
@@ -59,7 +65,6 @@ const Posts = () => {
     getPosts();
   }, [randstate]);
 
-  console.log("infinityLOOP?")
   return (
     <div>
       {pathname === "/dashboard/posts/" ? (
@@ -67,14 +72,19 @@ const Posts = () => {
           color="primary"
           variant="outlined"
           style={{ marginLeft: "15px" }}
-          // onClick={() => {
-          //   setIsOpen(true);
-          // }}
+          onClick={() => {
+            setIsOpen(true);
+          }}
         >
           Add Posts
         </Button>
       ) : null}
-      {/* <EditUsersModal open={isOpen} onClose={() => setIsOpen(false)} /> */}
+      <AddPostsModal
+        setRandstate={setRandstate}
+        randstate={randstate}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
       {postsList.length >= 1 ? (
         postsList.map((posts) => {
           return (
@@ -88,17 +98,16 @@ const Posts = () => {
               price={posts.price}
               title={posts.title}
               location={posts.location}
-              setStartDate={setStartDate}
-              startDate={startDate}
+              rating={posts.rating}
+              rentalDate={posts.rentalDate}
               deletePost={deletePost}
               updatePost={updatePost}
-              setTitle={setTitle}
-              setPrice={setPrice}
-              setColor={setColor}
-              setModel={setModel}
-              setLocation={setLocation}
+              setPostData={setPostData}
+              postData={postData}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
+              uploaded={posts.uploaded.toDate()}
+              cancelRent={cancelRent}
             />
           );
         })

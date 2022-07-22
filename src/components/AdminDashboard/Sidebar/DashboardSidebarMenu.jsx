@@ -15,7 +15,6 @@ const DashboardSidebarMenu = () => {
     <List
       sx={{
         width: "100%",
-        maxWidth: 360,
         bgcolor: "background.paper",
       }}
       component="nav"

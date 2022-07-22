@@ -14,11 +14,13 @@ import DashPostsContent from "./components/AdminDashboard/Content/DashPostsConte
 import { auth } from "./FirebaseConfig";
 import Manager from "./pages/RouteProtector/Manager";
 import DashRentedBikesContent from "./components/AdminDashboard/Content/DashRentedBikesContent";
+import { SearchContext } from "../src/context/SearchContext";
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [searchFilter, setSearchFilter] = useState({});
 
   useEffect(() => {
     return auth.onAuthStateChanged(async (user) => {
@@ -37,46 +39,48 @@ const App = () => {
   return (
     <>
       <AuthContextProvider>
-        <Header
-          isAuth={isAuth}
-          setIsAuth={setIsAuth}
-          isAdmin={isAdmin}
-          setIsAdmin={setIsAdmin}
-        />
-        <Routes>
-          <Route path="/" element={<Mainpage />} />
-          <Route
-            path="/login/"
-            element={
-              <LoggedIn isAuth={isAuth}>
-                <Login setIsAuth={setIsAuth} />
-              </LoggedIn>
-            }
+        <SearchContext.Provider value={{ searchFilter, setSearchFilter }}>
+          <Header
+            isAuth={isAuth}
+            setIsAuth={setIsAuth}
+            isAdmin={isAdmin}
+            setIsAdmin={setIsAdmin}
           />
-          <Route
-            path="/signup/"
-            element={
-              <LoggedIn isAuth={isAuth}>
-                <Signup setIsAuth={setIsAuth} />
-              </LoggedIn>
-            }
-          />
-          <Route
-            path="/dashboard/"
-            element={
-              <Manager isAdmin={isAdmin}>
-                <Protected isAuth={isAuth}>
-                  <Dashboard />
-                </Protected>
-              </Manager>
-            }
-          >
-            <Route path="users" element={<DashUsersContent />} />
-            <Route path="posts" element={<DashPostsContent />} />
-            <Route path="rentedbikes" element={<DashRentedBikesContent />} />
-          </Route>
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Mainpage />} />
+            <Route
+              path="/login/"
+              element={
+                <LoggedIn isAuth={isAuth}>
+                  <Login setIsAuth={setIsAuth} />
+                </LoggedIn>
+              }
+            />
+            <Route
+              path="/signup/"
+              element={
+                <LoggedIn isAuth={isAuth}>
+                  <Signup setIsAuth={setIsAuth} />
+                </LoggedIn>
+              }
+            />
+            <Route
+              path="/dashboard/"
+              element={
+                <Manager isAdmin={isAdmin}>
+                  <Protected isAuth={isAuth}>
+                    <Dashboard />
+                  </Protected>
+                </Manager>
+              }
+            >
+              <Route path="users" element={<DashUsersContent />} />
+              <Route path="posts" element={<DashPostsContent />} />
+              <Route path="rentedbikes" element={<DashRentedBikesContent />} />
+            </Route>
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </SearchContext.Provider>
       </AuthContextProvider>
     </>
   );
