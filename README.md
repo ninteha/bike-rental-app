@@ -2,7 +2,7 @@
 
 # General Info
 
-Bike-Rental App
+- With this application you can rent a bike in any date you desire.
 
 ## This project is created using:
 - [x] Hooks
