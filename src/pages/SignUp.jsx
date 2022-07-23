@@ -12,6 +12,7 @@ import { auth, db } from "../FirebaseConfig";
 import { Link } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { UserAuth } from "../context/AuthContext";
+import { Fade } from "react-awesome-reveal";
 
 const paperStyle = {
   padding: 30,
@@ -55,58 +56,60 @@ const Signup = () => {
   };
 
   return (
-    <Grid>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
-          <Avatar style={avatarStyle}></Avatar>
-          <h2>Sign Up</h2>
-          {isRegistered ? (
-            <Alert style={breakStyle}>Account is created!</Alert>
-          ) : null}
-          {error ? (
-            <Alert severity="error" style={breakStyle}>
-              {error}
-            </Alert>
-          ) : null}
-        </Grid>
-        <TextField
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-          label="Email"
-          placeholder="Enter your Email"
-          fullWidth
-          required
-        />
-        <TextField
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          label="Password"
-          placeholder="Enter your Password"
-          fullWidth
-          type="password"
-          required
-          style={breakStyle}
-        />
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          fullWidth
-          onClick={handleSubmit}
-        >
-          Sign Up
-        </Button>
-        <Typography style={breakStyle}>
-          Already have an account?
-          <Link to="/login/">
-            <br />
-            Sign In
-          </Link>
-        </Typography>
-      </Paper>
-    </Grid>
+    <Fade delay={200}>
+      <Grid>
+        <Paper elevation={10} style={paperStyle}>
+          <Grid align="center">
+            <Avatar style={avatarStyle}></Avatar>
+            <h2>Sign Up</h2>
+            {isRegistered ? (
+              <Alert style={breakStyle}>Account is created!</Alert>
+            ) : null}
+            {error ? (
+              <Alert severity="error" style={breakStyle}>
+                {error}
+              </Alert>
+            ) : null}
+          </Grid>
+          <TextField
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            label="Email"
+            placeholder="Enter your Email"
+            fullWidth
+            required
+          />
+          <TextField
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            label="Password"
+            placeholder="Enter your Password"
+            fullWidth
+            type="password"
+            required
+            style={breakStyle}
+          />
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={handleSubmit}
+          >
+            Sign Up
+          </Button>
+          <Typography style={breakStyle}>
+            Already have an account?
+            <Link to="/login/">
+              <br />
+              Sign In
+            </Link>
+          </Typography>
+        </Paper>
+      </Grid>
+    </Fade>
   );
 };
 

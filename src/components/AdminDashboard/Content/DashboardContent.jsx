@@ -7,12 +7,12 @@ import { UserAuth } from "../../../context/AuthContext";
 const DashboardWelcome = () => {
   const { user } = UserAuth();
   return (
-    <DashboardLayout>
-      <Typography variant="h5" color="initial" sx={{padding: "0 20px"}} >
-        Welcome, {user.email}
-      </Typography>
-      <Outlet />
-    </DashboardLayout>
+      <DashboardLayout>
+        <Typography variant="h5" color="initial" sx={{ padding: "0 20px" }}>
+          Welcome, {user.email}
+        </Typography>
+        <Outlet />
+      </DashboardLayout>
   );
 };
 

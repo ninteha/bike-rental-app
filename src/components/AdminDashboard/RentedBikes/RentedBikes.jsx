@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../../FirebaseConfig";
 import DashRentedBikesLayout from "../Content/DashRentedBikesLayout";
 
+
 const RentedBikes = () => {
   const [rentedBikes, setRentedBikes] = useState([]);
   const bikesRef = collection(db, "bikes");
@@ -15,7 +16,12 @@ const RentedBikes = () => {
     };
 
     getBikes();
+
+    return () => {
+      setRentedBikes([]);
+    };
   }, []);
+
   return (
     <div>
       {rentedBikes.length >= 1 ? (

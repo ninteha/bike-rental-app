@@ -2,6 +2,7 @@ import { Stack } from "@mui/material";
 import React from "react";
 import DashboardSidebar from "../../components/AdminDashboard/Sidebar/DashboardSidebar";
 import DashboardContent from "../../components/AdminDashboard/Content/DashboardContent";
+import { Fade } from "react-awesome-reveal";
 
 const stackStyle = {
   margin: "10px 40px",
@@ -12,10 +13,12 @@ const stackStyle = {
 
 const Dashboard = () => {
   return (
-    <Stack direction="row" justifyContent="center" style={stackStyle}>
-      <DashboardSidebar />
-      <DashboardContent />
-    </Stack>
+    <Fade delay={200}>
+      <Stack direction="row" justifyContent="center" style={stackStyle}>
+        <DashboardSidebar />
+        <DashboardContent />
+      </Stack>
+    </Fade>
   );
 };
 

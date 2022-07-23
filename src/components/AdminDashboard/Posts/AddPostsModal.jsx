@@ -34,7 +34,7 @@ const OverlayStyles = {
   zIndex: 1000,
 };
 
-const AddPostsModal = ({ onClose, open, setRandstate, randstate }) => {
+const AddPostsModal = ({ onClose, open, reload, setReload }) => {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [img, setImg] = useState("");
@@ -42,15 +42,14 @@ const AddPostsModal = ({ onClose, open, setRandstate, randstate }) => {
   const [price, setPrice] = useState();
   const [model, setModel] = useState();
   const [error, setError] = useState("");
-  const rentalDate = new Date();
 
   const postsRef = collection(db, "bikes");
   // Add Posts handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setRandstate(randstate + 1);
+
     try {
-       await addDoc(postsRef, {
+      await addDoc(postsRef, {
         id: auth.currentUser.uid,
         title,
         location,
@@ -58,10 +57,10 @@ const AddPostsModal = ({ onClose, open, setRandstate, randstate }) => {
         color,
         price,
         model,
-        rentalDate,
         uploaded: new Date(),
       });
       onClose();
+      setReload(!reload);
     } catch (err) {
       setError(err.message);
       console.log(err.message);

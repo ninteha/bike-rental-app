@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Mainpage from "./pages/MainPage";
 import { Routes, Route } from "react-router-dom";
 import Signup from "./pages/SignUp";
@@ -20,10 +20,15 @@ const App = () => {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const [searchFilter, setSearchFilter] = useState({});
+  const [searchFilter, setSearchFilter] = useState({
+    color: [],
+    location: [],
+    model: [],
+    search: "",
+  });
 
-  useEffect(() => {
-    return auth.onAuthStateChanged(async (user) => {
+  useMemo(() => {
+    auth.onAuthStateChanged(async (user) => {
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
         if (idTokenResult.claims.role === "admin") {
@@ -35,7 +40,14 @@ const App = () => {
         }
       }
     });
+
+    console.log("app.js render");
+
+    return () => {
+      setIsAdmin(false);
+    };
   }, []);
+
   return (
     <>
       <AuthContextProvider>

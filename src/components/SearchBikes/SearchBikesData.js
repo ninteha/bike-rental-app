@@ -1,14 +1,61 @@
 export const SearchBikesData = [
   {
     title: "Colors",
-    categories: ["Red", "Black", "Green", "White"],
+    categories: [
+      {
+        itemTitle: "Red",
+        category: "color",
+      },
+      {
+        itemTitle: "Orange",
+        category: "color",
+      },
+      {
+        itemTitle: "Black",
+        category: "color",
+      },
+      {
+        itemTitle: "White",
+        category: "color",
+      },
+    ],
   },
   {
     title: "Location",
-    categories: ["Tbilisi", "Qutaisi", "Rustavi", "Batumi"],
+    categories: [
+      {
+        itemTitle: "Tbilisi",
+        category: "location",
+      },
+      {
+        itemTitle: "Qutaisi",
+        category: "location",
+      },
+      {
+        itemTitle: "Batumi",
+        category: "location",
+      },
+    ],
   },
   {
     title: "Models",
-    categories: ["BMX", "Mountain", "Off-street"],
+    categories: [
+      {
+        itemTitle: "BMX",
+        category: "model",
+      },
+      {
+        itemTitle: "Mountain",
+        category: "model",
+      },
+      {
+        itemTitle: "Off-street",
+        category: "model",
+      },
+      {
+        itemTitle: "Sport",
+        category: "model",
+      },
+    ],
   },
 ];

@@ -8,21 +8,26 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { SearchContext } from "../../../context/SearchContext";
 import { auth, db } from "../../../FirebaseConfig";
 import DashPostsLayout from "../Content/DashPostsLayout";
 import AddPostsModal from "./AddPostsModal";
+
 
 const Posts = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = window.location.pathname;
   const [postsList, setPostsList] = useState([]);
+  const [filtredPostsList, setfiltredPostsList] = useState(postsList);
   const postsRef = collection(db, "bikes");
   const [isEditing, setIsEditing] = useState(false);
+  const { searchFilter } = useContext(SearchContext);
+  const [reload, setReload] = useState(false);
+  const [cancelRentReload, setCancelRentReload] = useState(false);
 
   // Cancel Rent
   const cancelRent = async (id) => {
-    setRandstate(randstate + 1);
     await updateDoc(doc(postsRef, id), {
       ...postData,
       rentalDate: deleteField(),
@@ -30,15 +35,15 @@ const Posts = () => {
       rentedTo: deleteField(),
     });
     console.log("post updated ");
+    setCancelRentReload(!cancelRentReload);
     setIsEditing(false);
   };
 
   // Edit Posts states
-  const [randstate, setRandstate] = useState(0);
+
   const [postData, setPostData] = useState([]);
 
   const updatePost = async (id) => {
-    setRandstate(randstate + 1);
     await updateDoc(doc(postsRef, id), {
       ...postData,
       rentedToId: auth.currentUser.uid,
@@ -46,14 +51,15 @@ const Posts = () => {
     });
     console.log("post updated ");
     setIsEditing(false);
+    setReload(!reload);
   };
 
   // Delete Posts
 
   const deletePost = async (id) => {
-    setRandstate(randstate + 1);
     const postsDoc = doc(db, "bikes", id);
     await deleteDoc(postsDoc);
+    setReload(!reload);
   };
   // Get Posts data from Firebase
 
@@ -61,9 +67,48 @@ const Posts = () => {
     const getPosts = async () => {
       const data = await getDocs(postsRef);
       setPostsList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setfiltredPostsList(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
     };
     getPosts();
-  }, [randstate]);
+  }, [reload, cancelRentReload]);
+
+  // Filter Data
+  useEffect(() => {
+    const posts = filterPosts();
+    setfiltredPostsList(posts);
+  }, [searchFilter]);
+
+  const filterPosts = () => {
+    let filteredPosts = postsList.reduce((acc, item) => {
+      const filterKeys = Object.keys(searchFilter);
+
+      filterKeys.forEach((category) => {
+        if (searchFilter[category].includes(item[category])) acc.push(item);
+      });
+
+      if (
+        item.title.toLowerCase().includes(searchFilter.search) &&
+        searchFilter.search.length > 0
+      )
+        acc.push(item);
+
+      return acc;
+    }, []);
+
+    filteredPosts = [...new Set(filteredPosts)];
+
+    if (searchFilter.search.length > 0)
+      filteredPosts = filteredPosts.filter((post) =>
+        post.title.toLowerCase().includes(searchFilter.search)
+      );
+
+    if (!filteredPosts.length > 0 && !searchFilter.search.length > 0)
+      return postsList;
+
+    return filteredPosts;
+  };
 
   return (
     <div>
@@ -80,13 +125,13 @@ const Posts = () => {
         </Button>
       ) : null}
       <AddPostsModal
-        setRandstate={setRandstate}
-        randstate={randstate}
         open={isOpen}
         onClose={() => setIsOpen(false)}
+        setReload={setReload}
+        reload={reload}
       />
-      {postsList.length >= 1 ? (
-        postsList.map((posts) => {
+      {filtredPostsList.length >= 1 ? (
+        filtredPostsList.map((posts) => {
           return (
             <DashPostsLayout
               key={posts.id}

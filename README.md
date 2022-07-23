@@ -2,7 +2,7 @@
 
 # General Info
 
-<!-- [x] [Live Demo](link) -->
+Bike-Rental App
 
 ## This project is created using:
 - [x] Hooks
@@ -10,15 +10,22 @@
 - [x] MUI
 - [x] Firebase
 - [x] React-Router
+- [x] React Reveal
 
 ## Features:
-- d
-- d
-- d
-- d
-- d
+- Filter Posts by "Categories, Title"
+- Admin Dashboard + User and Admin Role
+- Manage Users/Posts "Add, Remove, Edit"
+- Firebase Firestore for Data
+- Authentication With Firebase "Login, Register"
+- Rent a bike With just 1 Click
 
 
-# Screenshots
+## Installation:
 
-<!-- <img src="screen/screen1.png"> -->
+- Just Download files, open it in the Visual Studio Code.
+- Then type in Terminal "npm install" when it's done "npm start"
+
+## Creator:
+
+- Nynteh

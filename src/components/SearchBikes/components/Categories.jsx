@@ -5,24 +5,33 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect } from "react";
+import React, { useCallback, useContext } from "react";
 import { SearchContext } from "../../../context/SearchContext";
 import { SearchBikesData } from "../SearchBikesData";
 
 const Categories = () => {
   const { searchFilter, setSearchFilter } = useContext(SearchContext);
 
-  useEffect(() => {
-    console.log(searchFilter);
-  }, [searchFilter, setSearchFilter]);
+  const filterHandler = useCallback((categoryName, item) => {
+    const categoryNameIncludes = searchFilter[categoryName].includes(item)
+    if(!categoryNameIncludes) {
+      setSearchFilter({...searchFilter, [categoryName]: [...searchFilter[categoryName], item]});
+      return;
+    }
+    
+    setSearchFilter({...searchFilter, [categoryName]: searchFilter[categoryName].filter(cat => cat !== item)});
+  }, [searchFilter, setSearchFilter])
+
+
+  console.log(searchFilter);
 
   return (
     <>
       {SearchBikesData.map((item, index) => {
         return (
-          <>
+          <React.Fragment key={index}>
             <div style={{ width: "100%" }}>
-              <Typography key={index} variant="body1">
+              <Typography variant="body1">
                 <h1
                   style={{
                     fontSize: "14px",
@@ -39,16 +48,19 @@ const Categories = () => {
                     width: "100%",
                   }}
                 >
-                  {item.categories?.map((category, index) => {
+                  {item.categories?.map((item, index) => {
                     return (
                       <div key={index}>
                         <FormGroup>
                           <FormControlLabel
                             control={<Checkbox />}
-                            label={category}
-                            onChange={() =>
-                              setSearchFilter({...searchFilter, category})
-                            }
+                            label={item.itemTitle}
+                            onChange={() => {
+                              filterHandler(
+                                item.category,
+                                item.itemTitle
+                              )
+                            }}
                           />
                         </FormGroup>
                       </div>
@@ -57,7 +69,7 @@ const Categories = () => {
                 </div>
               </Typography>
             </div>
-          </>
+          </React.Fragment>
         );
       })}
     </>

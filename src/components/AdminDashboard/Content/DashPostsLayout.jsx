@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   Divider,
@@ -7,7 +8,7 @@ import {
   Rating,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DatePicker from "react-datepicker";
@@ -37,19 +38,15 @@ const DashPostsLayout = ({
   const [newRating, setNewRating] = useState(rating);
   const [selectedDate, setSelectedDate] = useState(uploaded);
 
-  useEffect(() => {
+  useMemo(() => {
     const handleRating = () => {
-      console.log(newRating);
       setPostData({ ...postData, rating: newRating });
     };
     if (newRating !== rating) {
       handleRating();
       updatePost(postsId);
-      console.log("updated !!!!!");
     } else return;
-  }, [newRating, postData, postsId, rating, setPostData, updatePost]);
-
-  console.log(moment(rentalDate).format("L"));
+  }, [newRating]);
 
   return (
     <div>

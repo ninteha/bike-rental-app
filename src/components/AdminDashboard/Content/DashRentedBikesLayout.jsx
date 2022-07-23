@@ -3,7 +3,6 @@ import React from "react";
 import moment from "moment";
 
 const DashRentedBikesLayout = ({ title, price, location, rentalDate }) => {
-  console.log("rented bikes:", rentalDate);
 
   return (
     <div>
