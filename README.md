@@ -4,6 +4,10 @@
 
 - With this application you can rent a bike in any date you desire.
 
+# Admin Account
+- Login: admin@admin.com
+- Password: admin123
+
 ## This project is created using:
 - [x] Hooks
 - [x] Context
