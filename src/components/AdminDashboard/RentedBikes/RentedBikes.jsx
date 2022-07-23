@@ -34,6 +34,7 @@ const RentedBikes = () => {
               title={bikes.title}
               price={bikes.price}
               location={bikes.location}
+              rentedTo={bikes.rentedTo}
             />
           );
         })

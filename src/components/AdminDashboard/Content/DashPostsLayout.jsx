@@ -37,6 +37,7 @@ const DashPostsLayout = ({
 }) => {
   const [newRating, setNewRating] = useState(rating);
   const [selectedDate, setSelectedDate] = useState(uploaded);
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
 
   useMemo(() => {
     const handleRating = () => {
@@ -195,47 +196,56 @@ const DashPostsLayout = ({
             </Button>
           ) : null}
         </div>
-        {pathname !== "/dashboard/posts/" ? (
-          <div>
-            {!rentalDate ? (
-              <>
-                <Typography variant="body1">Rent a bike:</Typography>
-                <DatePicker
-                  selected={selectedDate}
-                  minDate={new Date()}
-                  filterDate={(date) =>
-                    moment(date).format("L") !== moment(rentalDate).format("L")
-                  }
-                  onChange={(date) => {
-                    setSelectedDate(date);
-                    setPostData({ ...postData, rentalDate: date });
+        {isAuth ? (
+          <>
+            {pathname !== "/dashboard/posts/" ? (
+              <div>
+                {!rentalDate ? (
+                  <>
+                    <Typography variant="body1">Rent a bike:</Typography>
+                    <DatePicker
+                      selected={selectedDate}
+                      minDate={new Date()}
+                      filterDate={(date) =>
+                        moment(date).format("L") !==
+                        moment(rentalDate).format("L")
+                      }
+                      onChange={(date) => {
+                        setSelectedDate(date);
+                        setPostData({ ...postData, rentalDate: date });
+                      }}
+                    />
+                  </>
+                ) : null}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    paddingTop: "15px",
                   }}
-                />
-              </>
-            ) : null}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                paddingTop: "15px",
-              }}
-            >
-              {!rentalDate ? (
-                <Button onClick={() => updatePost(postsId)} variant="contained">
-                  Rent a bike!
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => cancelRent(postsId)}
-                  variant="contained"
-                  color="error"
                 >
-                  Cancel a rent
-                </Button>
-              )}
-            </div>
-          </div>
+                  {!rentalDate ? (
+                    <Button
+                      onClick={() => updatePost(postsId)}
+                      variant="contained"
+                    >
+                      Rent a bike!
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => cancelRent(postsId)}
+                      variant="contained"
+                      color="error"
+                    >
+                      Cancel a rent
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </>
         ) : null}
+
         {pathname === "/dashboard/posts/" ? (
           <div>
             <span

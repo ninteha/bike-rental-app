@@ -2,8 +2,13 @@ import { Divider, Paper, Typography } from "@mui/material";
 import React from "react";
 import moment from "moment";
 
-const DashRentedBikesLayout = ({ title, price, location, rentalDate }) => {
-
+const DashRentedBikesLayout = ({
+  title,
+  price,
+  location,
+  rentalDate,
+  rentedTo,
+}) => {
   return (
     <div>
       {rentalDate ? (
@@ -35,6 +40,7 @@ const DashRentedBikesLayout = ({ title, price, location, rentalDate }) => {
               <Typography variant="body1">
                 Rental Date: {moment(rentalDate.toDate()).format("L")}
               </Typography>
+              <Typography variant="body1">Rented To: {rentedTo}</Typography>
             </div>
           </div>
         </Paper>
